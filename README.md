@@ -1,2 +1,3 @@
 # dorico-scripts
-My Dorico 4 scripts
+My Dorico 5
+ scripts

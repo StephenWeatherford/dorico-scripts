@@ -1,5 +1,5 @@
 @if "%_echo"== "" @echo off
-set PLUGINS="%appdata%\Steinberg\Dorico 4\Script plug-ins"
+set PLUGINS="%appdata%\Steinberg\Dorico 5\Script plug-ins"
 if not exist %PLUGINS% mkdir %PLUGINS%
 copy %PLUGINS%\usermacro.lua scripts\%1.lua
 if errorlevel 0 goto end
