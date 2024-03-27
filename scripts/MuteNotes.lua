@@ -1,4 +1,2 @@
 local app=DoApp.DoApp()
-app:doCommand([[UI.InvokePropertyChangeValue?Type=kEventMuted&Value=true]])
-app:doCommand([[UI.InvokePropertyChangeValue?Type=kEventColour&Value=#ff000000]])
-app:doCommand([[UI.InvokePropertyChangeValue?Type=kEventColour&Value=#ffff80ff]])
+app:doCommand([[UI.InvokePropertyChangeValue?Type=kEventMuted&Value=string: "true"]])

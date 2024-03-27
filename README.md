@@ -1,2 +1,2 @@
 # dorico-scripts
-My Dorico 3.5 scripts
+My Dorico 4 scripts
