@@ -1,0 +1,5 @@
+local app=DoApp.DoApp()
+app:doCommand([[Edit.UngroupDynamics?OpenScoreID=-1&LayoutID=-1]])
+app:doCommand([[Edit.UnlinkElement?OpenScoreID=-1&LayoutID=-1]])
+app:doCommand([[Edit.GroupDynamicsTogether?OpenScoreID=-1&LayoutID=-1]])
+app:doCommand([[Edit.LinkElements?OpenScoreID=-1&LayoutID=-1]])
