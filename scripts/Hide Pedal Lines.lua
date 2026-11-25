@@ -1,0 +1,7 @@
+local app=DoApp.DoApp()
+app:doCommand([[UI.InvokePropertyChangeValue?Type=kPedalLineContinuationType&Value=string: "kLine"]])
+app:doCommand([[UI.InvokePropertyChangeValue?Type=kPedalLineContinuationType&Value=string: "kNone"]])
+app:doCommand([[Edit.Undo]])
+app:doCommand([[View.CentreSelection?Force=0]])
+app:doCommand([[Edit.Undo]])
+app:doCommand([[View.CentreSelection?Force=0]])

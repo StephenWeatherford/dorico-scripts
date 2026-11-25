@@ -1,0 +1,80 @@
+-- ReaScript (Lua) for Reaper: Detect MIDI notes in real-time and trigger alert except for specified ones
+
+-- User-defined settings
+local allowed_notes = {65, 63, 71, 68} -- Specific MIDI note numbers to allow
+local allowed_pitch_classes = {5, 3, 11, 8} -- Allowed pitch classes (F, Eb, B, Ab in all octaves)
+local alert_velocity = 127  -- Velocity to apply to "wrong" notes
+local play_alert = true      -- Set to true to trigger an alert sound
+local script_running = true  -- Set to false to stop the script
+
+reaper.ShowConsoleMsg("Script started.\n")
+
+-- Function to check if a note is in the allowed list (either specific notes or pitch classes)
+function is_allowed(note)
+    -- Check for specific allowed notes
+    for _, v in ipairs(allowed_notes) do
+        if v == note then return true end
+    end
+    
+    -- Check for allowed pitch classes
+    local base_note = note % 12  -- Get the pitch class (0-11) ignoring octave
+    for _, v in ipairs(allowed_pitch_classes) do
+        if v == base_note then return true end
+    end
+    
+    return false
+end
+
+-- Function to stop the script manually
+function stopScript()
+    script_running = false
+    reaper.ShowConsoleMsg("Stopping script...\n")
+end
+
+-- Function to process real-time MIDI input
+function processMIDI()
+    if not script_running then
+        reaper.ShowConsoleMsg("Script stopped.\n")
+        return  -- Exit the function if script is stopped
+    end
+    
+    local track = reaper.GetSelectedTrack(0, 0) -- Get the first selected track
+    if not track then
+        reaper.ShowConsoleMsg("No track selected. Please select a track with MIDI input.\n")
+        reaper.defer(processMIDI)
+        return
+    end
+    
+    local midi_in = reaper.TrackFX_AddByName(track, "ReaControlMIDI", false, 1)
+    if midi_in < 0 then
+        reaper.ShowConsoleMsg("ReaControlMIDI is not found on the track. Please add it.\n")
+        reaper.defer(processMIDI)
+        return
+    end
+
+    local ret, msg = reaper.TrackFX_GetParam(track, midi_in, 0)
+    if ret then
+        local pitch = math.floor(msg * 127)
+        
+        -- Ignore MIDI note 0 if nothing is playing
+        if pitch == 0 then
+            reaper.defer(processMIDI)
+            return
+        end
+        
+        reaper.ShowConsoleMsg("MIDI Note Received: " .. pitch .. "\n")
+
+        if not is_allowed(pitch) then
+            reaper.ShowConsoleMsg("⚠️ Alert: Wrong Note Played - MIDI Note " .. pitch .. "\n")
+            if play_alert then
+                reaper.ShowConsoleMsg("Beep!\n")
+            end
+        end
+    end
+
+    reaper.defer(processMIDI) -- Keep running the script
+end
+
+-- Run the script continuously
+reaper.defer(processMIDI)
+
